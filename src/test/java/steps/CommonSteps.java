@@ -5,6 +5,7 @@ import bookstore.models.CredentialModel;
 import bookstore.models.TokenResponse;
 import bookstore.models.UserResponse;
 import driver.Driver;
+import driver.LoadProperties;
 import io.cucumber.java.*;
 import io.cucumber.java.en.Given;
 import mail.EmailClient;
@@ -17,20 +18,24 @@ import utilities.Utils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Optional;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import utils.PropertyUtility;
 
 import static driver.Driver.BrowserType.chrome;
 
 
 public class CommonSteps extends Utils {
 
+    public Properties properties = LoadProperties.initialize();
+    ObjectMapper objectMapper = new ObjectMapper();
     public Scenario scenario;
     public boolean authenticate;
     public boolean initialiseBrowser;
-    ObjectMapper objectMapper = new ObjectMapper();
+    boolean sendReportEmail = Boolean.parseBoolean(properties.getProperty("send-report-email"));
 
     @Before
     public void before(Scenario scenario) {
@@ -59,12 +64,30 @@ public class CommonSteps extends Utils {
             captureScreen();
             Driver.quitDriver();
             log.error(scenario.getName() + ": FAILED!", null);
-            EmailClient.sendEmail("The test is failed!","Failed!", PropertyUtility.getProperty("receiver-email"), PropertyUtility.getProperty("sender-email"), PropertyUtility.getProperty("email-secret"));
+            if (sendReportEmail) {
+                log.info("Preparing the failed report email");
+                EmailClient.sendEmail(
+                        "The test is failed!",
+                        "Scenario " + scenario.getSourceTagNames().stream().map(tag -> tag.get).filter(tag -> tag.contains("@SCN")) + " - " + scenario.getName() + " is failed!",
+                        properties.getProperty("receiver-email"),
+                        properties.getProperty("sender-email"),
+                        properties.getProperty("email-secret")
+                );
+                log.success("Email sent!");
+            }
         }
         if (initialiseBrowser && !scenario.isFailed()) {
             Driver.quitDriver();
             log.success(scenario.getName() + ": PASS!");
-            EmailClient.sendEmail("The test is passed!","Success!", PropertyUtility.getProperty("receiver-email"), PropertyUtility.getProperty("sender-email"), PropertyUtility.getProperty("email-secret"));
+            if (sendReportEmail) {
+                log.info("Preparing the success report email");
+                EmailClient.sendEmail("The test is passed!",
+                        "Scenario " + scenario.getSourceTagNames().stream().filter(tag -> tag.contains("@SCN")).findAny() + " - " + scenario.getName() + " is passed!",
+                        properties.getProperty("receiver-email"),
+                        properties.getProperty("sender-email"),
+                        properties.getProperty("email-secret")
+                );
+            }
         }
     }
 

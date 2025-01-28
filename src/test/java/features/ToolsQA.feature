@@ -1,5 +1,5 @@
-Feature: DemoQA
-  @Web-UI @Chrome @SCN-DemoQA-1
+Feature: ToolsQA
+  @Web-UI @Chrome @SCN-ToolsQA-1
   Scenario: Submit Form Test
     * Navigate to https://demoqa.com/
     * Select the Forms card on the landing page
@@ -29,7 +29,7 @@ Feature: DemoQA
     * Verify the submitted value of Address on the submission modal
     * Verify the submitted value of State and City on the submission modal
 
-  @Web-UI @SCN-DemoQA-2
+  @Web-UI @SCN-ToolsQA-2
   Scenario: Slider interaction
     * Navigate to https://demoqa.com/
     * Select the Widgets card on the landing page
@@ -37,7 +37,7 @@ Feature: DemoQA
     * Set window size to 10000, 10000
     * Slide the slider to 44
 
-  @Web-UI @Chrome @SCN-DemoQA-3
+  @Web-UI @Chrome @SCN-ToolsQA-3
   Scenario: Download and Upload interaction
     Project downloads directory adjusted for chrome only.
     * Navigate to https://demoqa.com/

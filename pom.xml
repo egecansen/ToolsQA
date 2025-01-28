@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>egecan</groupId>
-  <artifactId>DemoQA</artifactId>
+  <artifactId>ToolsQA</artifactId>
   <version>1.0-SNAPSHOT</version>
 
   <name>DemoQA</name>
