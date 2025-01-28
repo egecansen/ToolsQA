@@ -1,10 +1,7 @@
 package steps;
 
 import io.cucumber.java.en.Given;
-import mail.EmailClient;
 import pages.DownloadAndUploadPage;
-import utils.PropertyUtility;
-
 import java.io.File;
 
 public class DownloadAndUploadPageSteps {

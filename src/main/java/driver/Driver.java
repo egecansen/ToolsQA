@@ -5,12 +5,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.safari.SafariDriver;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,14 +18,10 @@ public class Driver {
     public enum BrowserType {
         chrome, safari, firefox
     }
-
     public static WebDriver driver;
 
     public static void setup(BrowserType browserType) {
-        Properties properties = new Properties();
-        try {properties.load(new FileReader("src/test/resources/test.properties"));}
-        catch (IOException notFoundException) {throw new RuntimeException("The Properties not exist!");}
-
+        Properties properties = LoadProperties.initialize();
         boolean headless = Boolean.parseBoolean(properties.getProperty("headless","false"));
         int frameWidth = Integer.parseInt(properties.getProperty("frame-width"));
         int frameHeight = Integer.parseInt(properties.getProperty("frame-height"));
